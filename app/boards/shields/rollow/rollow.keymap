@@ -1,0 +1,132 @@
+/*
+ * Copyright (c) 2020 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT OLD
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/ext_power.h>
+#define SDEL &sdel
+#define SBSPC &sbspc
+
+/ {
+    combos {
+        compatible = "zmk,combos";
+        combo_layer_0 {
+            timeout-ms = <20>;
+            key-positions = <31 34>;
+            bindings = <&to 0>;
+            };
+        compatible = "zmk,combos";
+        combo_layer_2 {
+            timeout-ms = <20>;
+            key-positions = <32 34>;
+            bindings = <&to 2>;
+            };
+        compatible = "zmk,combos";
+        combo_layer_3 {
+            timeout-ms = <20>;
+            key-positions = <31 33>;
+            bindings = <&to 3>;
+            };
+        compatible = "zmk,combos";
+        combo_escape {
+            timeout-ms = <20>;
+            key-positions = <0 9>;
+            bindings = <&kp ESC>;
+            };
+    };
+     tp: tap_mods {
+        compatible = "zmk,behavior-hold-tap";
+        label = "TAP_MODS";
+        #binding-cells = <2>;
+        tapping_term_ms = <350>;
+        quick-tap-ms = <200>;
+        global-quick-tap;
+        flavor = "tap-preferred";
+        bindings = <&kp>, <&kp>;
+        };
+    behaviors {
+        td_capslock: td_capslock {
+            compatible = "zmk,behavior-tap-dance";
+            label = "TD_CAPSLOCK";
+            #binding-cells = <0>;
+            tapping-term-ms = <170>;
+            bindings = <&mt LSHIFT Z>, <&kp CAPSLOCK>;
+        };
+        grave_excl: grave_excl {
+            compatible = "zmk,behavior-mod-morph";
+            label = "GRAVE_EXCL";
+            #binding-cells = <0>;
+            bindings = <&kp EXCL>, <&kp GRAVE>;
+            mods = <(MOD_RGUI|MOD_RSFT|MOD_LSFT)>;
+            keep-mods = <(MOD_RGUI|MOD_RSFT|MOD_LSFT)>;
+        };
+        sbspc: sbspc {
+            compatible = "zmk,behavior-mod-morph";
+            label = "SCROLLBSPC";
+            #binding-cells = <0>;
+            bindings = <&kp RIGHT>, <&kp BSPC>;
+            mods = <(MOD_LALT)>;
+            keep-mods = <(MOD_LALT)>;
+        };
+        sdel: sdel {
+            compatible = "zmk,behavior-mod-morph";
+            label = "SCROLLDEL";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT>, <&kp DEL>;
+            mods = <(MOD_LALT)>;
+            keep-mods = <(MOD_LALT)>;
+        };
+};
+    keymap {
+                compatible = "zmk,keymap";
+
+                0 {
+                        bindings = <
+&kp Q &kp W &kp E &kp R &kp T                    &kp Y &kp U  &kp I  &kp O   &kp P
+&kp A &kp S &kp D &kp F &kp G                    &kp H &kp J  &kp K  &kp L   &kp APOS
+&td_capslock &kp X &kp C &kp V &kp B             &kp N &kp M  &kp COMMA &kp DOT &mt RSHIFT FSLH
+     &none &tp LGUI SPACE &mo 1                  &tp RCTL RET &tp LALT BSPC &kp INSERT
+                        >;
+
+sensor-bindings = <&inc_dec_kp RIGHT LEFT &inc_dec_kp DOWN UP>;
+                };
+
+                1 {
+                 bindings = <
+&grave_excl  &kp AT  &kp HASH   &kp DLLR   &kp PRCNT             &kp CARET &kp AMPS &kp ASTERISK &kp LPAR &kp RPAR
+&kp TAB &none &none &kp LC(LEFT) &kp LC(RIGHT)                          &kp EQUAL &kp LBKT &kp RBKT &kp PIPE &kp SEMI
+&mt LSHIFT LG(Z) &kp LG(Y) &kp LG(X) &kp LG(C) &kp LG(V)                            &none &none &none &none &kp QUESTION
+          &none &none &none                                            &kp RGUI &kp DEL &none
+                        >;
+   
+sensor-bindings = <&inc_dec_kp RIGHT LEFT &inc_dec_kp PG_UP PG_DN>;
+                };
+                                
+                2 {
+                        bindings = <
+&none &none &none &none &none                                       &none &kp N7 &kp N8 &kp N9 &kp MINUS 
+&none &none &none &none &none                                     &none &kp N4 &kp N5 &kp N6 &none
+&none &none &none &none &none                                       &kp N0 &kp N1 &kp N2 &kp N3 &none
+                &none &none &none                              &mt RGUI RET &kp BSPC &none
+                            >;
+
+sensor-bindings = <&inc_dec_kp DOWN UP &inc_dec_kp C_VOL_DN C_VOL_UP>;
+                };
+
+                3 {
+                 bindings = <
+&kp LG(LS(3)) &none &none &none &none    &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4
+&none &none &none &none &none          &none &none &none &none &none 
+&none &none &none &none &none          &none &none &none &none &ext_power EP_TOG
+       &kp K_MUTE &none &none          &out OUT_USB &out OUT_BLE &bt BT_CLR
+                        >;
+   
+sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &inc_dec_kp C_BRI_UP C_BRI_DN>;
+                };
+        };
+};
